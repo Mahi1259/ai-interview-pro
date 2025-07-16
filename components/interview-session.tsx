@@ -701,33 +701,69 @@ export default function InterviewSession({ jobDescription, resume, onEnd }: Inte
         setInterviewPhase("technical")
         setCurrentQuestionIndex(0)
 
-        // Generate technical questions first
-        await generateQuestionsForPhase("technical")
+        // Generate technical questions and wait for them to be ready
+        try {
+          setIsLoading(true)
+          const response = await fetch("/api/generate-questions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jobDescription, resume, phase: "technical" }),
+          })
 
-        // Wait for questions to be set in state before proceeding
-        createTimeout(async () => {
-          if (!isInterviewEnded) {
-            // Get the latest questions from state
-            const latestQuestions = questions.length > 0 ? questions : fallbackQuestions.technical
-            const firstTechnicalQuestion = latestQuestions[0]
-
-            if (firstTechnicalQuestion) {
-              setCurrentQuestion(firstTechnicalQuestion)
-
-              const transitionMessage =
-                "Great! Thank you for that introduction. Now let's move to the technical questions. These will focus on your technical skills and knowledge relevant to the position."
-
-              speakQuestion(transitionMessage, () => {
-                if (!isInterviewEnded && firstTechnicalQuestion) {
-                  // Speak the first technical question after transition
-                  createTimeout(() => {
-                    speakQuestion(firstTechnicalQuestion.text)
-                  }, 1000)
-                }
-              })
-            }
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
           }
-        }, 500)
+
+          const data = await response.json()
+          console.log("Generated technical questions:", data)
+
+          let technicalQuestions = []
+          if (data.questions && data.questions.length > 0) {
+            technicalQuestions = data.questions
+          } else {
+            // Use fallback technical questions
+            technicalQuestions = fallbackQuestions.technical
+          }
+
+          // Update questions state and set current question
+          setQuestions(technicalQuestions)
+          setCurrentQuestion(technicalQuestions[0])
+          setIsLoading(false)
+
+          // Now speak the transition message
+          const transitionMessage =
+            "Great! Thank you for that introduction. Now let's move to the technical questions. These will focus on your technical skills and knowledge relevant to the position."
+
+          speakQuestion(transitionMessage, () => {
+            if (!isInterviewEnded && technicalQuestions[0]) {
+              // Speak the first technical question after transition
+              createTimeout(() => {
+                console.log("Speaking first technical question:", technicalQuestions[0].text)
+                speakQuestion(technicalQuestions[0].text)
+              }, 1000)
+            }
+          })
+        } catch (error) {
+          console.error("Error generating technical questions:", error)
+          setIsLoading(false)
+
+          // Use fallback questions
+          const technicalQuestions = fallbackQuestions.technical
+          setQuestions(technicalQuestions)
+          setCurrentQuestion(technicalQuestions[0])
+
+          const transitionMessage =
+            "Great! Thank you for that introduction. Now let's move to the technical questions. These will focus on your technical skills and knowledge relevant to the position."
+
+          speakQuestion(transitionMessage, () => {
+            if (!isInterviewEnded && technicalQuestions[0]) {
+              createTimeout(() => {
+                console.log("Speaking first technical question (fallback):", technicalQuestions[0].text)
+                speakQuestion(technicalQuestions[0].text)
+              }, 1000)
+            }
+          })
+        }
       }
     }
     // Technical phase: Ask exactly 5 questions
@@ -751,33 +787,69 @@ export default function InterviewSession({ jobDescription, resume, onEnd }: Inte
         setInterviewPhase("behavioral")
         setCurrentQuestionIndex(0)
 
-        // Generate behavioral questions first
-        await generateQuestionsForPhase("behavioral")
+        // Generate behavioral questions and wait for them to be ready
+        try {
+          setIsLoading(true)
+          const response = await fetch("/api/generate-questions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jobDescription, resume, phase: "behavioral" }),
+          })
 
-        // Wait for questions to be set in state before proceeding
-        createTimeout(async () => {
-          if (!isInterviewEnded) {
-            // Get the latest questions from state
-            const latestQuestions = questions.length > 0 ? questions : fallbackQuestions.behavioral
-            const firstBehavioralQuestion = latestQuestions[0]
-
-            if (firstBehavioralQuestion) {
-              setCurrentQuestion(firstBehavioralQuestion)
-
-              const transitionMessage =
-                "Excellent! Now for the final phase, I'll ask you some behavioral questions. These will help me understand your experience and how you handle different situations."
-
-              speakQuestion(transitionMessage, () => {
-                if (!isInterviewEnded && firstBehavioralQuestion) {
-                  // Speak the first behavioral question after transition
-                  createTimeout(() => {
-                    speakQuestion(firstBehavioralQuestion.text)
-                  }, 1000)
-                }
-              })
-            }
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
           }
-        }, 500)
+
+          const data = await response.json()
+          console.log("Generated behavioral questions:", data)
+
+          let behavioralQuestions = []
+          if (data.questions && data.questions.length > 0) {
+            behavioralQuestions = data.questions
+          } else {
+            // Use fallback behavioral questions
+            behavioralQuestions = fallbackQuestions.behavioral
+          }
+
+          // Update questions state and set current question
+          setQuestions(behavioralQuestions)
+          setCurrentQuestion(behavioralQuestions[0])
+          setIsLoading(false)
+
+          // Now speak the transition message
+          const transitionMessage =
+            "Excellent! Now for the final phase, I'll ask you some behavioral questions. These will help me understand your experience and how you handle different situations."
+
+          speakQuestion(transitionMessage, () => {
+            if (!isInterviewEnded && behavioralQuestions[0]) {
+              // Speak the first behavioral question after transition
+              createTimeout(() => {
+                console.log("Speaking first behavioral question:", behavioralQuestions[0].text)
+                speakQuestion(behavioralQuestions[0].text)
+              }, 1000)
+            }
+          })
+        } catch (error) {
+          console.error("Error generating behavioral questions:", error)
+          setIsLoading(false)
+
+          // Use fallback questions
+          const behavioralQuestions = fallbackQuestions.behavioral
+          setQuestions(behavioralQuestions)
+          setCurrentQuestion(behavioralQuestions[0])
+
+          const transitionMessage =
+            "Excellent! Now for the final phase, I'll ask you some behavioral questions. These will help me understand your experience and how you handle different situations."
+
+          speakQuestion(transitionMessage, () => {
+            if (!isInterviewEnded && behavioralQuestions[0]) {
+              createTimeout(() => {
+                console.log("Speaking first behavioral question (fallback):", behavioralQuestions[0].text)
+                speakQuestion(behavioralQuestions[0].text)
+              }, 1000)
+            }
+          })
+        }
       }
     }
     // Behavioral phase: Ask exactly 4 questions
@@ -1219,7 +1291,7 @@ export default function InterviewSession({ jobDescription, resume, onEnd }: Inte
             <Button variant={isCameraOn ? "default" : "destructive"} size="lg" onClick={toggleCamera}>
               {isCameraOn ? <Video /> : <VideoOff />}
             </Button>
-            {/* <Button
+            <Button
               variant="outline"
               size="lg"
               onClick={handleManualNext}
@@ -1233,7 +1305,7 @@ export default function InterviewSession({ jobDescription, resume, onEnd }: Inte
               className="bg-orange-600 hover:bg-orange-700 text-white border-orange-600"
             >
               Skip Question
-            </Button> */}
+            </Button>
           </div>
         </div>
 
