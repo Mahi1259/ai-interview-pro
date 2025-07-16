@@ -184,7 +184,7 @@ export default function Home() {
           >
             ← Back to Home
           </Button>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AI Interview Assistant</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">AI Interview Pro</h1>
           <p className="text-lg text-gray-600">
             Practice your interview skills with AI-powered questions and real-time feedback
           </p>

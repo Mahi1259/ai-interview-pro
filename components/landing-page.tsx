@@ -54,7 +54,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Brain className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">AI Interview System</span>
+            <span className="text-xl font-bold">AI Interview Pro</span>
           </div>
         </header>
 
