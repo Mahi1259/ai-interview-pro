@@ -1013,7 +1013,7 @@ export default function InterviewSession({ jobDescription, resume, onEnd }: Inte
         "emptied",
       ]
       events.forEach((eventType) => {
-        video.removeEventListener(eventType, () => {})
+        video.removeEventListener(eventType, () => { })
       })
 
       // Pause and clear sources

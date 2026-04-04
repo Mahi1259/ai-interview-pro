@@ -349,9 +349,8 @@ export default function SpeechRecognition({ isListening, onResult, onStop }: Spe
             {[...Array(7)].map((_, i) => (
               <div
                 key={i}
-                className={`w-1 rounded-full transition-all duration-150 ${
-                  isRecognitionActive ? "bg-destructive animate-pulse" : "bg-muted-foreground"
-                }`}
+                className={`w-1 rounded-full transition-all duration-150 ${isRecognitionActive ? "bg-destructive animate-pulse" : "bg-muted-foreground"
+                  }`}
                 style={{
                   height: isRecognitionActive ? `${Math.random() * 20 + 8}px` : "8px",
                   animationDelay: `${i * 0.1}s`,

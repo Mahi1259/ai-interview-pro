@@ -3,12 +3,16 @@
 import type React from "react"
 
 import { useState } from "react"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Upload, X, CheckCircle, AlertCircle, type File } from "lucide-react"
-import InterviewSession from "@/components/interview-session"
-import LandingPage from "@/components/landing-page"
+
+// Dynamic imports with ssr: false to prevent hydration mismatches
+// (browser extensions inject attributes into SSR HTML before React hydrates)
+const LandingPage = dynamic(() => import("@/components/landing-page"), { ssr: false })
+const InterviewSession = dynamic(() => import("@/components/interview-session"), { ssr: false })
 
 interface FileUploadState {
   file: File | null
